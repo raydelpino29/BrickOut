@@ -1,11 +1,11 @@
 MVP's/Features
 
-1.) Choose amongst 3 levels
-3.) Have a moving background, which moves obstacles towards character
-4.) Restart game when character touches obstacle
-5.) Use spacebar to make character jump
-6.) Add to score as game time carries on
-7.) Have directions for game
+- Choose amongst 3 levels
+- Have a moving background, which moves obstacles towards character
+- Restart game when character touches obstacle
+- Use spacebar to make character jump
+- Add to score as game time carries on
+- Have directions for game
 
 Bonus:
 
@@ -17,11 +17,11 @@ Wireframes
 
 Architecture
 
-1.) Vanilla JavaScript for game logic
-2.) jQuery for event handling and toggling class of elements
-3.) CSS for game visuals
-4.) Webpack for dependencies
-5.) HTML5 Canvas for game rendering
+- Vanilla JavaScript for game logic
+- jQuery for event handling and toggling class of elements
+- CSS for game visuals
+- Webpack for dependencies
+- HTML5 Canvas for game rendering
 
 Implementation Timeline
 
