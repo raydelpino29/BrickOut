@@ -16,19 +16,31 @@
     <script>
     let x = 300;
     let y = 200;
+    changeX = 3;
+    changeY = 3;
+    let radius = 10;
     var canvas = document.getElementById('myCanvas')
     var context = canvas.getContext('2d')
     function redrawBall () {
-      context.clearRect(0, 0, 600, 300)
       context.beginPath();
-      context.arc(x, y, 10, 0, 2 * Math.PI);
+      context.arc(x, y, radius, 0, 2 * Math.PI);
       context.fillStyle = 'gray';
       context.fill();
       context.closePath();
-      x -= 3
-      y -= 3
     }
-    setInterval(redrawBall, 10)
+    function drawFrame () {
+      context.clearRect(0, 0, 600, 300)
+      redrawBall();
+      x -= changeX;
+      y -= changeY;
+      if (y - changeY <= 0 || (y + changeY) > 300) {
+        changeY = -changeY;
+      }
+      if (x - changeX <= 0 || (x + changeX)> 600) {
+        changeX = -changeX;
+      }
+    }
+    setInterval(drawFrame, 14)
     </script>
   </body>
 </html>
