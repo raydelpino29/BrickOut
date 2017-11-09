@@ -17,17 +17,18 @@
     let x = 300;
     let y = 200;
     let paddleX = 300;
+    let paddleY = 280;
     let changeX = 3;
     let changeY = 3;
     let radius = 10;
     let paddleHeight = 5;
-    let paddleWidth = 10;
+    let paddleWidth = 50;
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
     function drawPaddle() {
       context.beginPath();
       context.fillStyle = 'orange';
-      context.fillRect(paddleX, 280, paddleWidth, paddleHeight);
+      context.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
       context.closePath();
     }
     function redrawBall () {
@@ -43,8 +44,12 @@
       redrawBall();
       x -= changeX;
       y -= changeY;
-      if (y - changeY <= -5 + radius || y - changeY > 305 - radius) {
+      if (y - changeY <= -5 + radius) {
         changeY = -changeY;
+      } else if (y - changeY > 280) {
+        if (x > paddleX && x < paddleX + paddleWidth ) {
+          changeY = -changeY;
+        }
       }
       if (x - changeX <= -5 + radius || x - changeX > 605 - radius) {
         changeX = -changeX;
@@ -59,7 +64,7 @@
         }
       });
     }
-    setInterval(drawFrame, 14);
+    setInterval(drawFrame, 15);
     </script>
   </body>
 </html>
