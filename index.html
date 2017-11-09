@@ -46,6 +46,8 @@
       y -= changeY;
       if (y - changeY <= -5 + radius) {
         changeY = -changeY;
+      } else if (y - changeY > 300) {
+        document.location.reload();
       } else if (y - changeY > 280) {
         if (x > paddleX && x < paddleX + paddleWidth ) {
           changeY = -changeY;
@@ -54,16 +56,17 @@
       if (x - changeX <= -5 + radius || x - changeX > 605 - radius) {
         changeX = -changeX;
       }
-      document.addEventListener('keydown', (e) => {
-        switch(e.key) {
-          case "ArrowRight":
-            paddleX += 0.1;
-            break
-          case "ArrowLeft":
-            paddleX -= 0.1;
-        }
-      });
     }
+    document.addEventListener('keydown', (e) => {
+      console.log('hi')
+      switch(e.key) {
+        case "ArrowRight":
+        paddleX += 10;
+        break
+        case "ArrowLeft":
+        paddleX -= 10;
+      }
+    });
     setInterval(drawFrame, 15);
     </script>
   </body>
