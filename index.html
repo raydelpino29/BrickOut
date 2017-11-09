@@ -16,11 +16,19 @@
     <script>
     let x = 300;
     let y = 200;
-    changeX = 3;
-    changeY = 3;
+    let changeX = 3;
+    let changeY = 3;
     let radius = 10;
+    let paddleHeight = 5;
+    let paddleWidth = 10;
     var canvas = document.getElementById('myCanvas')
     var context = canvas.getContext('2d')
+    function drawPaddle() {
+      context.beginPath();
+      context.fillStyle = 'orange';
+      context.fillRect(300, 280, paddleWidth, paddleHeight)
+      context.closePath();
+    }
     function redrawBall () {
       context.beginPath();
       context.arc(x, y, radius, 0, 2 * Math.PI);
@@ -30,13 +38,14 @@
     }
     function drawFrame () {
       context.clearRect(0, 0, 600, 300)
+      drawPaddle();
       redrawBall();
       x -= changeX;
       y -= changeY;
-      if (y - changeY <= 0 || (y + changeY) > 300) {
+      if (y - changeY <= -5 + radius || y - changeY > 305 - radius) {
         changeY = -changeY;
       }
-      if (x - changeX <= 0 || (x + changeX)> 600) {
+      if (x - changeX <= -5 + radius || x - changeX > 605 - radius) {
         changeX = -changeX;
       }
     }
