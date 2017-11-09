@@ -16,17 +16,18 @@
     <script>
     let x = 300;
     let y = 200;
+    let paddleX = 300;
     let changeX = 3;
     let changeY = 3;
     let radius = 10;
     let paddleHeight = 5;
     let paddleWidth = 10;
-    var canvas = document.getElementById('myCanvas')
-    var context = canvas.getContext('2d')
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext('2d');
     function drawPaddle() {
       context.beginPath();
       context.fillStyle = 'orange';
-      context.fillRect(300, 280, paddleWidth, paddleHeight)
+      context.fillRect(paddleX, 280, paddleWidth, paddleHeight);
       context.closePath();
     }
     function redrawBall () {
@@ -37,7 +38,7 @@
       context.closePath();
     }
     function drawFrame () {
-      context.clearRect(0, 0, 600, 300)
+      context.clearRect(0, 0, 600, 300);
       drawPaddle();
       redrawBall();
       x -= changeX;
@@ -48,8 +49,17 @@
       if (x - changeX <= -5 + radius || x - changeX > 605 - radius) {
         changeX = -changeX;
       }
+      document.addEventListener('keydown', (e) => {
+        switch(e.key) {
+          case "ArrowRight":
+            paddleX += 0.1;
+            break
+          case "ArrowLeft":
+            paddleX -= 0.1;
+        }
+      });
     }
-    setInterval(drawFrame, 14)
+    setInterval(drawFrame, 14);
     </script>
   </body>
 </html>
