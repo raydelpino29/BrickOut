@@ -23,8 +23,11 @@
     let radius = 10;
     let paddleHeight = 5;
     let paddleWidth = 50;
-    let brickX = 30;
-    let brickY = 25;
+    let brickX;
+    let brickY;
+    let brickRow = 6;
+    let brickColumn = 6;
+    let bricksArr = [];
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
     function drawPaddle() {
@@ -33,11 +36,47 @@
       context.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
       context.closePath();
     }
+    function createBricks () {
+      for (var row = 0; row < brickRow; row++) {
+        bricksArr[row] = [];
+        for (var col = 0; col < brickColumn; col++) {
+          brickX = row*(32 + 20) + 145
+          brickY = col*(15 + 5) + 30
+          bricksArr[row][col] = { x: brickX, y: brickY, health: 2 };
+        }
+      }
+    }
     function drawBrick () {
-      context.beginPath();
-      context.fillStyle = 'red';
-      context.fillRect(brickX, brickY, 32, 15 );
-      context.closePath();
+        createBricks();
+        bricksArr.forEach(function (brickRow) {
+          brickRow.forEach(function (brick) {
+            if (brick.health === 2) {
+              context.beginPath();
+              context.fillStyle = 'red';
+              context.fillRect(brick.x, brick.y, 32, 15 );
+              context.closePath();
+            } else if (brick.health === 1) {
+                context.beginPath();
+                context.fillStyle = 'brown';
+                context.fillRect(brick.x, brick.y, 32, 15 );
+                context.closePath();
+            }
+          });
+        });
+      }
+    function checkBrickCollision () {
+      bricksArr.forEach(function (brickRow) {
+        brickRow.forEach(function (brick) {
+          if (brick.health === 2) {
+            if (x - changeX > brick.x && x - changeX < brick.x + 32) {
+              if (y - changeY > brick.y && y - changeY < brick.y + 15) {
+                changeY = -changeY;
+                brick.health === 1
+              }
+            }
+          }
+        })
+      })
     }
     function redrawBall () {
       context.beginPath();
@@ -48,14 +87,15 @@
     }
     function drawFrame () {
       context.clearRect(0, 0, 600, 300);
-      drawPaddle();
       drawBrick();
+      drawPaddle();
       redrawBall();
+      checkBrickCollision();
       x -= changeX;
       y -= changeY;
       if (y - changeY <= -5 + radius) {
         changeY = -changeY;
-      } else if (y - changeY > 300) {
+      } else if (y - changeY > 289) {
         document.location.reload();
       } else if (y - changeY > 280) {
         if (x > paddleX && x < paddleX + paddleWidth ) {
@@ -65,9 +105,9 @@
       if (x - changeX <= -5 + radius || x - changeX > 605 - radius) {
         changeX = -changeX;
       }
+      requestAnimationFrame(drawFrame)
     }
     document.addEventListener('keydown', (e) => {
-      console.log('hi')
       switch(e.key) {
         case "ArrowRight":
         paddleX += 10;
@@ -76,7 +116,7 @@
         paddleX -= 10;
       }
     });
-    setInterval(drawFrame, 15);
+    requestAnimationFrame(drawFrame)
     </script>
   </body>
 </html>
