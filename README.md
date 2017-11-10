@@ -1,19 +1,19 @@
 MVP's/Features
 
 - Choose amongst 3 levels
-- Have a moving background, which moves obstacles towards character
-- Restart game when character touches obstacle
-- Use spacebar to make character jump
-- Add to score as game time carries on
+- Move paddle with arrow keys
+- Destroy bricks with certain number of hits with ball
+- Add to score as bricks are destroyed
 - Have directions for game
 
 Bonus:
 
-- Choose amongst 3 different characters
+- Have snake moving around bricks, which blocks ball
 
 Wireframes
 
-![image](https://user-images.githubusercontent.com/29177545/32528999-ed8b4360-c403-11e7-8fd8-83dd4f0e23bb.png)
+![screen shot 2017-11-09 at 9 13 09 pm](https://user-images.githubusercontent.com/29177545/32639676-f9fd6138-c592-11e7-8e47-6891203cbb90.png)
+
 
 Architecture
 
@@ -32,13 +32,13 @@ Implementation Timeline
 
   Day 2 Goals:
 
-    - Get background to scroll
-    - Enable character to jump
+    - Get ball to move and bounce of walls
+    - Move paddle with arrow keys
 
   Day 3 Goals:
 
-    - Stop game when character touches obstacle
-    - Restart game when player touches obstacle
+    - Render bricks to screen
+    - Destroy bricks when ball makes collision
 
   Day 4 Goals:
 
@@ -47,4 +47,4 @@ Implementation Timeline
 
   Day 5 Goals:
 
-    - Implement character choice functionality
+    - Implement snake moving around bricks
