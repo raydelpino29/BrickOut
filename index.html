@@ -18,16 +18,19 @@
     let y = 200;
     let paddleX = 300;
     let paddleY = 280;
-    let changeX = 3;
-    let changeY = 3;
-    let radius = 10;
+    let changeX = 1;
+    let changeY = 1;
+    let radius = 5;
     let paddleHeight = 5;
     let paddleWidth = 50;
     let brickX;
     let brickY;
     let brickRow = 6;
-    let brickColumn = 1;
+    let brickColumn = 4;
     let bricksArr = [];
+    let brickWidth = 32;
+    let brickHeight = 15;
+    let score = 0;
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
     function drawPaddle() {
@@ -40,40 +43,40 @@
       for (var row = 0; row < brickRow; row++) {
         bricksArr[row] = [];
         for (var col = 0; col < brickColumn; col++) {
-          brickX = row*(32 + 20) + 145
-          brickY = col*(15 + 5) + 30
-          bricksArr[row][col] = { x: brickX, y: brickY, health: 2 };
+          brickX = row*(brickWidth + 20) + 145
+          brickY = col*(brickHeight + 30) + 30
+          bricksArr[row][col] = { x: brickX, y: brickY, health: 1 };
         }
       }
     }
     function drawBrick () {
-        createBricks();
         bricksArr.forEach(function (brickRow) {
           brickRow.forEach(function (brick) {
-            if (brick.health === 2) {
+            if (brick.health === 1) {
               context.beginPath();
               context.fillStyle = 'red';
-              context.fillRect(brick.x, brick.y, 32, 15 );
-              context.closePath();
-            } else if (brick.health === 1) {
-                context.beginPath();
-                context.fillStyle = 'brown';
-                context.fillRect(brick.x, brick.y, 32, 15 );
-                context.closePath();
+              context.fillRect(brick.x, brick.y, brickWidth, brickHeight);
+              context.closePath(brick.x, brick.y, brickWidth, brickHeight);
+            } else {
+              context.clearRect(brick.x, brick.y, brickWidth, brickHeight)
             }
           });
         });
       }
-      x - changeX <= -5 + radius || x - changeX > 605 - radius
     function checkBrickCollision () {
-      bricksArr.forEach(function (brickRow) {
-        brickRow.forEach(function (brick) {
-          if (x > brick.x && x < brick.x + 32 && y - radius > brick.y && y - radius < brick.y + 15) {
+      bricksArr.forEach(function (brickRow, row) {
+        brickRow.forEach(function (brick, col) {
+          if (x >= brick.x && x <= brick.x + brickWidth && y - radius >= brick.y && y - radius <= brick.y + brickHeight) {
               changeY = -changeY;
               brick.health -= 1
-          } else if (x + radius > brick.x && x + radius < brick.x + 32 && y - radius > brick.y && y - radius < brick.y + 15) {
+              brick.x = null
+              brick.y = null
+          } else if (x >= brick.x && x <= brick.x + brickWidth && y + radius >= brick.y && y + radius <= brick.y + brickHeight) {
             changeY = -changeY;
             brick.health -= 1
+            brick.x = null
+            brick.y = null
+            score += 1;
           }
         });
       });
@@ -116,6 +119,7 @@
         paddleX -= 20;
       }
     });
+    createBricks();
     requestAnimationFrame(drawFrame)
     </script>
   </body>
