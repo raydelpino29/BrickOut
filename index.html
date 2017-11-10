@@ -23,12 +23,20 @@
     let radius = 10;
     let paddleHeight = 5;
     let paddleWidth = 50;
+    let brickX = 30;
+    let brickY = 25;
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
     function drawPaddle() {
       context.beginPath();
       context.fillStyle = 'orange';
       context.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+      context.closePath();
+    }
+    function drawBrick () {
+      context.beginPath();
+      context.fillStyle = 'red';
+      context.fillRect(brickX, brickY, 32, 15 );
       context.closePath();
     }
     function redrawBall () {
@@ -41,6 +49,7 @@
     function drawFrame () {
       context.clearRect(0, 0, 600, 300);
       drawPaddle();
+      drawBrick();
       redrawBall();
       x -= changeX;
       y -= changeY;
