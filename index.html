@@ -18,8 +18,8 @@
     let y = 200;
     let paddleX = 300;
     let paddleY = 280;
-    let changeX = 1;
-    let changeY = 1;
+    let changeX = 3;
+    let changeY = 2;
     let radius = 5;
     let paddleHeight = 5;
     let paddleWidth = 50;
@@ -64,14 +64,15 @@
         });
       }
     function checkBrickCollision () {
-      bricksArr.forEach(function (brickRow, row) {
-        brickRow.forEach(function (brick, col) {
-          if (x >= brick.x && x <= brick.x + brickWidth && y - radius >= brick.y && y - radius <= brick.y + brickHeight) {
+      bricksArr.forEach(function (brickRow) {
+        brickRow.forEach(function (brick) {
+          if (x + radius >= brick.x && x + radius <= brick.x + brickWidth && y - radius >= brick.y && y - radius <= brick.y + brickHeight) {
               changeY = -changeY;
               brick.health -= 1
               brick.x = null
               brick.y = null
-          } else if (x >= brick.x && x <= brick.x + brickWidth && y + radius >= brick.y && y + radius <= brick.y + brickHeight) {
+              score += 1
+          } else if (x + radius >= brick.x && x + radius <= brick.x + brickWidth && y + radius >= brick.y && y + radius <= brick.y + brickHeight) {
             changeY = -changeY;
             brick.health -= 1
             brick.x = null
@@ -80,6 +81,10 @@
           }
         });
       });
+    }
+    function displayScore () {
+      context.font = "20px Avenir";
+      context.fillText(`Your Score is: ${score}`, 455, 20 )
     }
     function redrawBall () {
       context.beginPath();
@@ -90,6 +95,7 @@
     }
     function drawFrame () {
       context.clearRect(0, 0, 600, 300);
+      displayScore();
       drawBrick();
       drawPaddle();
       redrawBall();
