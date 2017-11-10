@@ -18,7 +18,7 @@ Wireframes
 Architecture
 
 - Vanilla JavaScript for game logic
-- jQuery for event handling and toggling class of elements
+- DOM API for event handling and toggling class of elements
 - CSS for game visuals
 - Webpack for dependencies
 - HTML5 Canvas for game rendering
