@@ -146,21 +146,40 @@ class Bricks {
     }
     return this.bricksArr;
   }
+  //this.powerUps = ["paddleSizeUp", "paddleSizeDown", "ballSpeedUp", "ballSpeedDown"];
   drawBrick (bricksArr) {
     bricksArr.forEach((brickRow) => {
       brickRow.forEach((brick) => {
-        if (brick.health === 1 ) {
-          if (brick.powerUp) {
+        switch(brick.powerUp) {
+          case "paddleSizeUp":
             this.context.beginPath();
             this.context.fillStyle = 'orange';
             this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
             this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
-          } else {
+            break;
+          case "paddleSizeDown":
+            this.context.beginPath();
+            this.context.fillStyle = 'green';
+            this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            break;
+          case "ballSpeedUp":
+            this.context.beginPath();
+            this.context.fillStyle = 'blue';
+            this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            break;
+          case "ballSpeedDown":
+            this.context.beginPath();
+            this.context.fillStyle = 'yellow';
+            this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            break;
+          default:
             this.context.beginPath();
             this.context.fillStyle = 'red';
             this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
             this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
-          }
         }
       });
     });
@@ -206,7 +225,7 @@ class Game {
     this.ball = new Ball(context);
     this.bricks = new Bricks(context);
     this.bricksArr = bricksArr;
-    this.powerUps = ["paddleSize", "ballSpeedUp", "ballSpeedDown"];
+    this.powerUps = ["paddleSizeUp", "paddleSizeDown", "ballSpeedUp", "ballSpeedDown"];
     this.score = 0;
     this.drawFrame = this.drawFrame.bind(this);
     this.canvas = canvas;
@@ -221,10 +240,21 @@ class Game {
         if (x + this.ball.changeX >= brick.x && x +
           this.ball.changeX <= brick.x + this.bricks.brickWidth && y >= brick.y &&
           y <= brick.y + this.bricks.brickHeight ) {
+            if (brick.powerUp === "paddleSizeUp") {
+              this.paddle.paddleWidth *= 2;
+            } else if (brick.powerUp === "paddleSizeDown") {
+              this.paddle.paddleWidth /= 2;
+            } else if (brick.powerUp === "ballSpeedUp") {
+              this.ball.changeY *= 2;
+              this.ball.changeX *= 2;
+            } else if (brick.powerUp === "ballSpeedDown") {
+              this.ball.changeY /= 2;
+              this.ball.changeX /= 2;
+            }
             this.ball.changeY = -this.ball.changeY;
             brick.health -= 1;
-            brick.x = null;
-            brick.y = null;
+            brick.x = undefined;
+            brick.y = undefined;
             this.score += 1;
         }
       });
