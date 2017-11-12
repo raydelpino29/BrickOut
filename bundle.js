@@ -137,7 +137,6 @@ class Bricks {
     this.brickHeight = 15;
     this.ball = new Ball();
     this.context = context;
-    this.score = 0;
   }
   createBricks () {
     for (var row = 0; row < this.brickRow; row++) {
