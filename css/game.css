@@ -1,0 +1,12 @@
+canvas{
+  border: 1px solid green;
+  display: block;
+  margin: auto;
+  background-image: linear-gradient(0deg, white, blue);
+}
+
+body {
+  background-image: url('../images/game-background.jpg');
+  background-size: cover;
+  right: 5vw;
+}

@@ -122,9 +122,7 @@ module.exports = Ball;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Ball = __webpack_require__(1);
+/***/ (function(module, exports) {
 
 class Bricks {
   constructor(context) {
@@ -135,7 +133,6 @@ class Bricks {
     this.bricksArr = [];
     this.brickWidth = 32;
     this.brickHeight = 15;
-    this.ball = new Ball();
     this.context = context;
   }
   createBricks () {
@@ -144,7 +141,7 @@ class Bricks {
       for (var col = 0; col < this.brickColumn; col++) {
         this.brickX = row*(this.brickWidth + 20) + 145;
         this.brickY = col*(this.brickHeight + 30) + 30;
-        this.bricksArr[row][col] = { x: this.brickX, y: this.brickY, health: 1 };
+        this.bricksArr[row][col] = { x: this.brickX, y: this.brickY, health: 1, powerUp: null };
       }
     }
     return this.bricksArr;
@@ -153,12 +150,17 @@ class Bricks {
     bricksArr.forEach((brickRow) => {
       brickRow.forEach((brick) => {
         if (brick.health === 1 ) {
-          this.context.beginPath();
-          this.context.fillStyle = 'red';
-          this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
-          this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
-        } else {
-          this.context.clearRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
+          if (brick.powerUp) {
+            this.context.beginPath();
+            this.context.fillStyle = 'orange';
+            this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+          } else {
+            this.context.beginPath();
+            this.context.fillStyle = 'red';
+            this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+          }
         }
       });
     });
@@ -183,7 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const bricks = new Bricks(context);
   const paddle = new Paddle(context);
   let bricksArr = bricks.createBricks();
-  const game = new Game(context, bricksArr);
+  const game = new Game(context, bricksArr, canvas);
+  game.addPowerUps();
   requestAnimationFrame(game.drawFrame);
 });
 
@@ -197,14 +200,16 @@ const Ball = __webpack_require__(1);
 const Bricks = __webpack_require__(2);
 
 class Game {
-  constructor(context, bricksArr) {
+  constructor(context, bricksArr, canvas) {
     this.context = context;
     this.paddle = new Paddle(context);
     this.ball = new Ball(context);
     this.bricks = new Bricks(context);
     this.bricksArr = bricksArr;
+    this.powerUps = ["paddleSize", "ballSpeedUp", "ballSpeedDown"];
     this.score = 0;
     this.drawFrame = this.drawFrame.bind(this);
+    this.canvas = canvas;
   }
   displayScore () {
     this.context.font = "20px Avenir";
@@ -225,10 +230,26 @@ class Game {
       });
     });
   }
+  givePowerUp(powerUp) {
+    let powerBrick;
+    let row;
+    let col;
+    row = Math.floor(Math.random()*this.bricksArr.length);
+    col = Math.floor(Math.random()*this.bricksArr[row].length);
+    powerBrick = this.bricksArr[row][col];
+    if (!powerBrick.powerUp) {
+      powerBrick.powerUp = powerUp;
+    } else {
+      this.givePowerUp();
+    }
+  }
+  addPowerUps () {
+    this.powerUps.forEach((powerUp) => this.givePowerUp(powerUp));
+  }
   drawFrame () {
     let circleX;
     let circleY;
-    this.context.clearRect(0, 0, 600, 300);
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (var counter = 1; counter < 361; counter++) {
       circleX = this.ball.x + this.ball.radius*Math.cos(Math.PI*counter/180);
       circleY = this.ball.y + this.ball.radius*Math.sin(Math.PI*counter/180);
@@ -242,9 +263,9 @@ class Game {
     this.ball.y -= this.ball.changeY;
     if (this.ball.y - this.ball.changeY <= -5 + this.ball.radius) {
       this.ball.changeY = -this.ball.changeY;
-    } else if (this.ball.y - this.ball.changeY > 289) {
+    } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 11)) {
       document.location.reload();
-    } else if (this.ball.y - this.ball.changeY > 280) {
+    } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 20)) {
       if (this.ball.x > this.paddle.paddleX && this.ball.x < this.paddle.paddleX + this.paddle.paddleWidth ) {
         this.ball.changeY = -this.ball.changeY;
       }
