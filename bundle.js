@@ -231,6 +231,11 @@ class Game {
     this.drawFrame = this.drawFrame.bind(this);
     this.canvas = canvas;
     this.gameStarted = false;
+    window.addEventListener('keydown', (e) => {
+      if (e.key === "Enter") {
+        this.toggleGamePause();
+      }
+    });
   }
   displayScore () {
     this.context.font = "20px Avenir";
@@ -281,7 +286,8 @@ class Game {
   toggleGamePause() {
     if (this.gamePaused || !this.gameStarted) {
       this.gamePaused = false;
-      this.gameStarted = false;
+      this.gameStarted = true;
+      requestAnimationFrame(this.drawFrame);
     } else if (!this.gamePaused) {
       this.gamePaused = true;
     }
@@ -317,7 +323,7 @@ class Game {
       requestAnimationFrame(this.drawFrame);
     } else if (!this.gameStarted) {
       this.context.font = "60px Avenir";
-      this.context.fillText("Press Enter to Play!", 450, 20 );
+      this.context.fillText("Press Enter to Play!", this.canvas.width/12, this.canvas.height/2);
     }
   }
 }
