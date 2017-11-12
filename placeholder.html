@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+      canvas{
+        border: 1px solid green;
+        display: block;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" height="300" width="600"></canvas>
+    <script>
+    let x = Math.random()*(600);
+    let y = Math.random()*(300);
+    let paddleX = 300;
+    let paddleY = 280;
+    let changeX = 3;
+    let changeY = 2;
+    let radius = 5;
+    let paddleHeight = 5;
+    let paddleWidth = 100;
+    let brickX;
+    let brickY;
+    let brickRow = 6;
+    let brickColumn = 4;
+    let bricksArr = [];
+    let brickWidth = 32;
+    let brickHeight = 15;
+    let score = 0;
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext('2d');
+    function drawPaddle() {
+      context.beginPath();
+      context.fillStyle = 'orange';
+      context.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+      context.closePath();
+    }
+    function createBricks () {
+      for (var row = 0; row < brickRow; row++) {
+        bricksArr[row] = [];
+        for (var col = 0; col < brickColumn; col++) {
+          brickX = row*(brickWidth + 20) + 145
+          brickY = col*(brickHeight + 30) + 30
+          bricksArr[row][col] = { x: brickX, y: brickY, health: 1 };
+        }
+      }
+    }
+    function drawBrick () {
+        bricksArr.forEach(function (brickRow) {
+          brickRow.forEach(function (brick) {
+            if (brick.health === 1 ) {
+              context.beginPath();
+              context.fillStyle = 'red';
+              context.fillRect(brick.x, brick.y, brickWidth, brickHeight);
+              context.closePath(brick.x, brick.y, brickWidth, brickHeight);
+            } else {
+              context.clearRect(brick.x, brick.y, brickWidth, brickHeight)
+            }
+          });
+        });
+      }
+    function checkBrickCollision (x, y) {
+      bricksArr.forEach(function (brickRow) {
+        brickRow.forEach(function (brick) {
+          if (x + changeX >= brick.x && x + changeX <= brick.x + brickWidth && y >= brick.y && y <= brick.y + brickHeight ) {
+            changeY = -changeY;
+             brick.health -= 1
+             brick.x = null
+             brick.y = null
+             score += 1
+          }
+        });
+      });
+    }
+    function displayScore () {
+      context.font = "20px Avenir";
+      context.fillText(`Your Score is: ${score}`, 450, 20 )
+    }
+    function redrawBall () {
+      context.beginPath();
+      context.arc(x, y, radius, 0, 2 * Math.PI);
+      context.fillStyle = 'gray';
+      context.fill();
+      context.closePath();
+    }
+    function drawFrame () {
+        let circleX;
+        let circleY;
+      context.clearRect(0, 0, 600, 300);
+      for (var counter = 1; counter < 361; counter++) {
+        circleX = x + radius*Math.cos(Math.PI*counter/180)
+        circleY = y + radius*Math.sin(Math.PI*counter/180)
+        checkBrickCollision(circleX, circleY);
+      }
+      displayScore();
+      drawBrick();
+      drawPaddle();
+      redrawBall();
+      x -= changeX;
+      y -= changeY;
+      if (y - changeY <= -5 + radius) {
+        changeY = -changeY;
+      } else if (y - changeY > 289) {
+        document.location.reload();
+      } else if (y - changeY > 280) {
+        if (x > paddleX && x < paddleX + paddleWidth ) {
+          changeY = -changeY;
+        }
+      }
+      if (x - changeX <= -5 + radius || x - changeX > 605 - radius) {
+        changeX = -changeX;
+      }
+      requestAnimationFrame(drawFrame)
+    }
+    document.addEventListener('keydown', (e) => {
+      switch(e.key) {
+        case "ArrowRight":
+          paddleX += 20;
+          break
+        case "ArrowLeft":
+          paddleX -= 20;
+      }
+    });
+    createBricks();
+    requestAnimationFrame(drawFrame)
+    </script>
+  </body>
+</html>
