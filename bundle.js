@@ -231,9 +231,10 @@ class Game {
     this.drawFrame = this.drawFrame.bind(this);
     this.canvas = canvas;
     this.gameStarted = false;
+    this.gameOver = false;
     window.addEventListener('keydown', (e) => {
-      if (e.key === "Enter") {
-        this.toggleGamePause();
+      if (e.key === "Enter" || e.key === "p" ) {
+        this.toggleGamePause(e.key);
       }
     });
   }
@@ -283,15 +284,22 @@ class Game {
   addPowerUps () {
     this.powerUps.forEach((powerUp) => this.givePowerUp(powerUp));
   }
-  toggleGamePause() {
-    if (this.gamePaused || !this.gameStarted) {
-      this.gamePaused = false;
-      this.gameStarted = true;
-      requestAnimationFrame(this.drawFrame);
-    } else if (!this.gamePaused) {
-      this.gamePaused = true;
+  toggleGamePause(key) {
+    if (key === "Enter") {
+      if (!this.gameStarted) {
+        this.gameStarted = true;
+        requestAnimationFrame(this.drawFrame);
+      }
+    } else if (key === "p") {
+      if (this.gamePaused) {
+        this.gamePaused = false;
+        requestAnimationFrame(this.drawFrame);
+      } else if (!this.gamePaused) {
+        this.gamePaused = true;
+      }
     }
   }
+
   drawFrame () {
     if (!this.gamePaused && this.gameStarted ) {
       let circleX;
@@ -324,6 +332,10 @@ class Game {
     } else if (!this.gameStarted) {
       this.context.font = "60px Avenir";
       this.context.fillText("Press Enter to Play!", this.canvas.width/12, this.canvas.height/2);
+    } else if (this.gamePaused) {
+      this.context.font = "50px Avenir";
+      this.context.fillStyle = 'green';
+      this.context.fillText("Press 'p' to continue.", this.canvas.width/10, this.canvas.height/2);
     }
   }
 }
