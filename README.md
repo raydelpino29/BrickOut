@@ -2,13 +2,13 @@ MVP's/Features
 
 - Choose amongst 3 levels
 - Move paddle with arrow keys
-- Destroy bricks with certain number of hits with ball
+- Add power ups for random bricks
 - Add to score as bricks are destroyed
 - Have directions for game
 
 Bonus:
 
-- Have snake moving around bricks, which blocks ball
+- paddle increases speed as keys are held
 
 Wireframes
 
@@ -28,7 +28,7 @@ Implementation Timeline
   Day 1 Goals:
 
     - Set up Webpack and study Canvas API
-    - Render background and character to the screen
+    - Render paddle and ball to the screen
 
   Day 2 Goals:
 
@@ -43,8 +43,9 @@ Implementation Timeline
   Day 4 Goals:
 
     - Implement functionality to tally score
-    - Implement multiple levels of difficulty
+    - Implement power ups
 
   Day 5 Goals:
 
-    - Implement snake moving around bricks
+    - Implement levels of difficulty
+    - Add directions
