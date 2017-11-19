@@ -238,10 +238,12 @@ class Game {
       }
     });
   }
+
   displayScore () {
     this.context.font = "20px Avenir";
     this.context.fillText(`Your Score is: ${this.score}`, 450, 20 );
   }
+
   checkBrickCollision (x, y) {
     this.bricksArr.forEach((brickRow) => {
       brickRow.forEach((brick) => {
@@ -268,6 +270,7 @@ class Game {
       });
     });
   }
+  
   givePowerUp(powerUp) {
     let powerBrick;
     let row;
@@ -281,9 +284,11 @@ class Game {
       this.givePowerUp();
     }
   }
+
   addPowerUps () {
     this.powerUps.forEach((powerUp) => this.givePowerUp(powerUp));
   }
+
   toggleGamePause(key) {
     if (key === "Enter") {
       if (!this.gameStarted) {
@@ -305,17 +310,20 @@ class Game {
       let circleX;
       let circleY;
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
       for (var counter = 1; counter < 361; counter++) {
         circleX = this.ball.x + this.ball.radius*Math.cos(Math.PI*counter/180);
         circleY = this.ball.y + this.ball.radius*Math.sin(Math.PI*counter/180);
         this.checkBrickCollision(circleX, circleY);
       }
+
       this.displayScore();
       this.bricks.drawBrick(this.bricksArr);
       this.paddle.drawPaddle();
       this.ball.redrawBall();
       this.ball.x -= this.ball.changeX;
       this.ball.y -= this.ball.changeY;
+
       if (this.ball.y - this.ball.changeY <= -5 + this.ball.radius) {
         this.ball.changeY = -this.ball.changeY;
       } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 11)) {
@@ -325,9 +333,11 @@ class Game {
           this.ball.changeY = -this.ball.changeY;
         }
       }
+
       if (this.ball.x - this.ball.changeX <= -5 + this.ball.radius || this.ball.x - this.ball.changeX > 605 - this.ball.radius) {
         this.ball.changeX = -this.ball.changeX;
       }
+
       requestAnimationFrame(this.drawFrame);
     } else if (!this.gameStarted) {
       this.context.font = "60px Avenir";
