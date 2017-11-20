@@ -12,7 +12,7 @@
   - Orange Brick => Increases Paddle Size
   - Blue Brick => Increases Ball Speed
   - Yellow Brick => Decreases Ball Speed
-- All destroyed bricks add 1 to your score
+- Every destroyed brick adds 1 to your score
 
 ## Collision Detection
 
