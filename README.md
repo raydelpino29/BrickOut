@@ -4,15 +4,15 @@
 
 ## Game Directions
 
-- 1.) Press left and right arrow keys to move paddle
-- 2.) Bounce the ball off the paddle to destroy bricks
-- 3.) Destroy all bricks to win game
-- 4.) Hit different colored bricks to get power ups
+- Press left and right arrow keys to move paddle
+- Bounce the ball off the paddle to destroy bricks
+- Destroy all bricks to win game
+- Hit different colored bricks to get power ups
   - Green Brick => Decreases Paddle Size
   - Orange Brick => Increases Paddle Size
   - Blue Brick => Increases Ball Speed
   - Yellow Brick => Decreases Ball Speed
-- 5.) All destroyed bricks add 1 to your score
+- All destroyed bricks add 1 to your score
 
 ## Collision Detection
 
