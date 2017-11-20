@@ -1,5 +1,5 @@
 ## Play Now
-
+![brickout-background](https://user-images.githubusercontent.com/29177545/33031227-a1f3032e-cdeb-11e7-89ef-867c99e28528.png)
 [live link](https://raydelpino29.github.io/BrickOut/)
 
 ## Game Directions
