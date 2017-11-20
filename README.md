@@ -1,51 +1,169 @@
-MVP's/Features
+## Play Now
 
-- Choose amongst 3 levels
-- Move paddle with arrow keys
-- Add power ups for random bricks
-- Add to score as bricks are destroyed
-- Have directions for game
+(live link)
 
-Bonus:
+## Game Directions
 
-- paddle increases speed as keys are held
+1.) Press left and right arrow keys to move paddle
+2.) Bounce the ball off the paddle to destroy bricks
+3.) Destroy all bricks to win game
+4.) Hit different colored bricks to get power ups
+  - Green Brick => Decreases Paddle Size
+  - Orange Brick => Increases Paddle Size
+  - Blue Brick => Increases Ball Speed
+  - Yellow Brick => Decreases Ball Speed
+5.) All destroyed bricks add 1 to your score
 
-Wireframes
+## Collision Detection
 
-![screen shot 2017-11-09 at 9 13 09 pm](https://user-images.githubusercontent.com/29177545/32639676-f9fd6138-c592-11e7-8e47-6891203cbb90.png)
+The paddle, ball, walls, and all bricks are constantly aware of their location. They compare their location against one another to determine if they are touching. If the ball and paddle are touching, the ball changes direction. The ball direction will also change if the ball and wall are colliding. If the ball collides with a brick, it changes direction, destroys the brick, and applies the corresponding power up if needed.
 
+```javascript
+//ball and brick collision detection
+checkBrickCollision (x, y) {
+  this.bricksArr.forEach((brickRow) => {
+    brickRow.forEach((brick) => {
+      if (x + this.ball.changeX >= brick.x && x +
+        this.ball.changeX <= brick.x + this.bricks.brickWidth && y >= brick.y &&
+        y <= brick.y + this.bricks.brickHeight ) {
+          if (brick.powerUp === "paddleSizeUp") {
+            this.paddle.paddleWidth *= 2;
+          } else if (brick.powerUp === "paddleSizeDown") {
+            this.paddle.paddleWidth /= 2;
+          } else if (brick.powerUp === "ballSpeedUp") {
+            this.ball.changeY *= 2;
+            this.ball.changeX *= 2;
+          } else if (brick.powerUp === "ballSpeedDown") {
+            this.ball.changeY /= 2;
+            this.ball.changeX /= 2;
+          }
+          this.ball.changeY = -this.ball.changeY;
+          brick.health -= 1;
+          brick.x = undefined;
+          brick.y = undefined;
+          this.score += 1;
+      }
+    });
+  });
+}
+//ball, paddle, and wall collision detection
+  if (this.ball.y - this.ball.changeY <= -5 + this.ball.radius) {
+    this.ball.changeY = -this.ball.changeY;
+  } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 11)) {
+    document.location.reload();
+  } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 20)) {
+    if (this.ball.x > this.paddle.paddleX && this.ball.x < this.paddle.paddleX + this.paddle.paddleWidth ) {
+      this.ball.changeY = -this.ball.changeY;
+    }
+  }
 
-Architecture
+  if (this.ball.x - this.ball.changeX <= -5 + this.ball.radius || this.ball.x - this.ball.changeX > 605 - this.ball.radius) {
+    this.ball.changeX = -this.ball.changeX;
+  }
+}
+```
+Some of the more challenging code to write was when implementing the collision detection of the ball and bricks. When a circle collides with a square, you have to calculate all the points on the circumference of the circle and compare them against the length and width of the bricks.
 
-- Vanilla JavaScript for game logic
-- DOM API for event handling and toggling class of elements
-- CSS for game visuals
-- Webpack for dependencies
-- HTML5 Canvas for game rendering
+```javascript
+//calculating all points on circle at each frame
+for (var counter = 1; counter < 361; counter++) {
+  circleX = this.ball.x + this.ball.radius*Math.cos(Math.PI*counter/180);
+  circleY = this.ball.y + this.ball.radius*Math.sin(Math.PI*counter/180);
+  this.checkBrickCollision(circleX, circleY);
+}
+```
+## Event Handling
 
-Implementation Timeline
+The event handling written into the game is responsible for beginning the game, pausing the game, and controlling the paddle.
 
-  Day 1 Goals:
+```javascript
+toggleGamePause(key) {
+  //handling beginning of game and pause
+  if (key === "Enter") {
+    if (!this.gameStarted) {
+      this.gameStarted = true;
+      requestAnimationFrame(this.drawFrame);
+    }
+  } else if (key === "p") {
+    if (this.gamePaused) {
+      this.gamePaused = false;
+      requestAnimationFrame(this.drawFrame);
+    } else if (!this.gamePaused) {
+      this.gamePaused = true;
+    }
+  }
+}
+//handling paddle controls
+window.addEventListener('keydown', (e) => {
+  switch(e.key) {
+    case "ArrowRight":
+    this.paddleX += 20;
+    break;
+    case "ArrowLeft":
+    this.paddleX -= 20;
+  }
+});
+```
 
-    - Set up Webpack and study Canvas API
-    - Render paddle and ball to the screen
+## Recursive Calls
 
-  Day 2 Goals:
+Any functions that needed to be continually called were implemented recursively, such as for redrawing the frame and giving bricks power ups.
 
-    - Get ball to move and bounce of walls
-    - Move paddle with arrow keys
+The frame needed to continually be drawn until the game had ended:
+```javascript
+drawFrame () {
+  if (!this.gamePaused && this.gameStarted ) {
+    let circleX;
+    let circleY;
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-  Day 3 Goals:
+    for (var counter = 1; counter < 361; counter++) {
+      circleX = this.ball.x + this.ball.radius*Math.cos(Math.PI*counter/180);
+      circleY = this.ball.y + this.ball.radius*Math.sin(Math.PI*counter/180);
+      this.checkBrickCollision(circleX, circleY);
+    }
 
-    - Render bricks to screen
-    - Destroy bricks when ball makes collision
+    this.displayScore();
+    this.bricks.drawBrick(this.bricksArr);
+    this.paddle.drawPaddle();
+    this.ball.redrawBall();
+    this.ball.x -= this.ball.changeX;
+    this.ball.y -= this.ball.changeY;
 
-  Day 4 Goals:
+    if (this.ball.y - this.ball.changeY <= -5 + this.ball.radius) {
+      this.ball.changeY = -this.ball.changeY;
+    } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 11)) {
+      document.location.reload();
+    } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 20)) {
+      if (this.ball.x > this.paddle.paddleX && this.ball.x < this.paddle.paddleX + this.paddle.paddleWidth ) {
+        this.ball.changeY = -this.ball.changeY;
+      }
+    }
 
-    - Implement functionality to tally score
-    - Implement power ups
+    if (this.ball.x - this.ball.changeX <= -5 + this.ball.radius || this.ball.x - this.ball.changeX > 605 - this.ball.radius) {
+      this.ball.changeX = -this.ball.changeX;
+    }
+    requestAnimationFrame(this.drawFrame);
+  }
+}...
+```
+The power up are given to random bricks, and if a brick already has a power up, we want to call the givePowerUp function again.
 
-  Day 5 Goals:
+```javascript
+givePowerUp(powerUp) {
+  let powerBrick;
+  let row;
+  let col;
+  row = Math.floor(Math.random()*this.bricksArr.length);
+  col = Math.floor(Math.random()*this.bricksArr[row].length);
+  powerBrick = this.bricksArr[row][col];
+  if (!powerBrick.powerUp) {
+    powerBrick.powerUp = powerUp;
+  } else {
+    this.givePowerUp();
+  }
+}
+```
 
-    - Implement levels of difficulty
-    - Add directions
+## Future Implementations
+ I plan on adding a feature that allows the user to fire bullets at the bricks in order to destroy them, as well as a high score.
