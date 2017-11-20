@@ -1,5 +1,6 @@
 ## Play Now
 [live link](https://raydelpino29.github.io/BrickOut/)
+
 ![brickout-background copy](https://user-images.githubusercontent.com/29177545/33031343-032c906a-cdec-11e7-8df7-32b4a0c3db85.png)
 
 
