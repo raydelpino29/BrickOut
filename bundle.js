@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,7 +68,7 @@
 /***/ (function(module, exports) {
 
 class Paddle {
-  constructor(context) {
+  constructor(context, canvas) {
     this.paddleX = 300;
     this.paddleY = 280;
     this.paddleHeight = 5;
@@ -77,10 +77,14 @@ class Paddle {
     window.addEventListener('keydown', (e) => {
       switch(e.key) {
         case "ArrowRight":
-        this.paddleX += 20;
-        break;
+          if (this.paddleX + this.paddleWidth < canvas.width) {
+            this.paddleX += 20;
+          }
+          break;
         case "ArrowLeft":
-        this.paddleX -= 20;
+        if (this.paddleX > 0) {
+          this.paddleX -= 20;
+        }
       }
     });
   }
@@ -97,31 +101,6 @@ module.exports = Paddle;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-class Ball {
-  constructor(context) {
-    this.x = Math.random()*(600);
-    this.y = Math.random()*(300);
-    this.changeX = 3;
-    this.changeY = 2;
-    this.radius = 5;
-    this.context = context;
-  }
-  redrawBall () {
-    this.context.beginPath();
-    this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    this.context.fillStyle = 'gray';
-    this.context.fill();
-    this.context.closePath();
-  }
-}
-
-module.exports = Ball;
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports) {
 
 class Bricks {
@@ -190,19 +169,18 @@ module.exports = Bricks;
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Game = __webpack_require__(4);
-const Bricks = __webpack_require__(2);
+const Game = __webpack_require__(3);
+const Bricks = __webpack_require__(1);
 const Paddle = __webpack_require__(0);
 
 
 document.addEventListener('DOMContentLoaded', () => {
   var canvas = document.getElementById('myCanvas');
   var context = canvas.getContext('2d');
-  const bricks = new Bricks(context);
-  const paddle = new Paddle(context);
+  let bricks = new Bricks(context);
   let bricksArr = bricks.createBricks();
   const game = new Game(context, bricksArr, canvas);
   game.addPowerUps();
@@ -211,17 +189,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Paddle = __webpack_require__(0);
-const Ball = __webpack_require__(1);
-const Bricks = __webpack_require__(2);
+const Ball = __webpack_require__(4);
+const Bricks = __webpack_require__(1);
 
 class Game {
   constructor(context, bricksArr, canvas) {
     this.context = context;
-    this.paddle = new Paddle(context);
+    this.paddle = new Paddle(context, canvas);
     this.ball = new Ball(context);
     this.bricks = new Bricks(context);
     this.bricksArr = bricksArr;
@@ -232,16 +210,48 @@ class Game {
     this.canvas = canvas;
     this.gameStarted = false;
     this.gameOver = false;
+    this.brokenBricks = 0;
+    this.numBricks = 0;
+    this.bricksArr.forEach((row) => {
+      row.forEach((col) => {
+        this.numBricks += 1;
+      });
+    });
     window.addEventListener('keydown', (e) => {
       if (e.key === "Enter" || e.key === "p" ) {
         this.toggleGamePause(e.key);
+      } else if (e.key === "r" && this.gameOver) {
+        this.resetGame();
       }
     });
   }
 
+  resetGame () {
+    this.bricksArr = this.bricks.createBricks();
+    this.addPowerUps();
+    this.gameOver = false;
+    this.numBricks = 0;
+    this.bricksArr.forEach((row) => {
+      row.forEach((col) => {
+        this.numBricks += 1;
+      });
+    });
+    this.brokenBricks = 0;
+    this.score = 0;
+    this.ball.x = Math.random()*(600);
+    this.ball.y = Math.random()*(300);
+    this.paddle.paddleX = 300;
+    this.paddle.paddleY = 280;
+    this.paddle.paddleHeight = 5;
+    this.paddle.paddleWidth = 100;
+    this.ball.changeX = 3;
+    this.ball.changeY = 2;
+    requestAnimationFrame(this.drawFrame);
+  }
+
   displayScore () {
     this.context.font = "20px Avenir";
-    this.context.fillText(`Your Score is: ${this.score}`, 450, 20 );
+    this.context.fillText(`Your Score is: ${this.score}`, 450, 20);
   }
 
   checkBrickCollision (x, y) {
@@ -265,12 +275,16 @@ class Game {
             brick.health -= 1;
             brick.x = undefined;
             brick.y = undefined;
+            this.brokenBricks += 1;
             this.score += 1;
         }
       });
     });
+    if (this.brokenBricks === this.numBricks) {
+      this.gameOver = true;
+    }
   }
-  
+
   givePowerUp(powerUp) {
     let powerBrick;
     let row;
@@ -290,6 +304,12 @@ class Game {
   }
 
   toggleGamePause(key) {
+    if (this.gameOver) {
+      this.context.font = "50px Avenir";
+      this.context.fillStyle = 'black';
+      this.context.fillText(`Your score is ${this.score}!`, this.canvas.width/4, this.canvas.height/2.5);
+      this.context.fillText("Press 'r' to play again.", this.canvas.width/10, this.canvas.height/1.8);
+    }
     if (key === "Enter") {
       if (!this.gameStarted) {
         this.gameStarted = true;
@@ -306,7 +326,9 @@ class Game {
   }
 
   drawFrame () {
-    if (!this.gamePaused && this.gameStarted ) {
+    if (this.gameOver) {
+      this.toggleGamePause();
+    } else if (!this.gamePaused && this.gameStarted ) {
       let circleX;
       let circleY;
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -327,7 +349,7 @@ class Game {
       if (this.ball.y - this.ball.changeY <= -5 + this.ball.radius) {
         this.ball.changeY = -this.ball.changeY;
       } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 11)) {
-        document.location.reload();
+        this.gameOver = true;
       } else if (this.ball.y - this.ball.changeY > (this.canvas.height - 20)) {
         if (this.ball.x > this.paddle.paddleX && this.ball.x < this.paddle.paddleX + this.paddle.paddleWidth ) {
           this.ball.changeY = -this.ball.changeY;
@@ -337,11 +359,12 @@ class Game {
       if (this.ball.x - this.ball.changeX <= -5 + this.ball.radius || this.ball.x - this.ball.changeX > 605 - this.ball.radius) {
         this.ball.changeX = -this.ball.changeX;
       }
-
       requestAnimationFrame(this.drawFrame);
+
     } else if (!this.gameStarted) {
       this.context.font = "60px Avenir";
       this.context.fillText("Press Enter to Play!", this.canvas.width/12, this.canvas.height/2);
+
     } else if (this.gamePaused) {
       this.context.font = "50px Avenir";
       this.context.fillStyle = 'green';
@@ -351,6 +374,31 @@ class Game {
 }
 
 module.exports = Game;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+class Ball {
+  constructor(context) {
+    this.x = Math.random()*(600);
+    this.y = Math.random()*(300);
+    this.changeX = 3;
+    this.changeY = 2;
+    this.radius = 5;
+    this.context = context;
+  }
+  redrawBall () {
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    this.context.fillStyle = 'gray';
+    this.context.fill();
+    this.context.closePath();
+  }
+}
+
+module.exports = Ball;
 
 
 /***/ })
