@@ -71,7 +71,7 @@ class Paddle {
   constructor(context, canvas) {
     this.paddleX = 300;
     this.paddleY = 280;
-    this.paddleHeight = 5;
+    this.paddleHeight = 10;
     this.paddleWidth = 100;
     this.context = context;
     window.addEventListener('keydown', (e) => {
@@ -93,6 +93,8 @@ class Paddle {
     this.context.fillStyle = 'orange';
     this.context.fillRect(this.paddleX, this.paddleY, this.paddleWidth, this.paddleHeight);
     this.context.closePath();
+    var paddleImage = document.getElementById("paddle");
+    this.context.drawImage(paddleImage, this.paddleX - 6, this.paddleY, this.paddleWidth + 10, this.paddleHeight);
   }
 }
 
@@ -159,6 +161,8 @@ class Bricks {
             this.context.fillStyle = 'red';
             this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
             this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            var brickImage = document.getElementById("brick");
+            this.context.drawImage(brickImage, brick.x, brick.y, this.brickWidth, this.brickHeight);
         }
       });
     });
@@ -242,7 +246,7 @@ class Game {
     this.ball.y = Math.random()*(300);
     this.paddle.paddleX = 300;
     this.paddle.paddleY = 280;
-    this.paddle.paddleHeight = 5;
+    this.paddle.paddleHeight = 10;
     this.paddle.paddleWidth = 100;
     this.ball.changeX = 3;
     this.ball.changeY = 2;
@@ -307,7 +311,7 @@ class Game {
     if (this.gameOver) {
       this.context.font = "50px Avenir";
       this.context.fillStyle = 'black';
-      this.context.fillText(`Your score is ${this.score}!`, this.canvas.width/4, this.canvas.height/2.5);
+      this.context.fillText(`Your score is ${this.score}!`, this.canvas.width/4.5, this.canvas.height/2.5);
       this.context.fillText("Press 'r' to play again.", this.canvas.width/10, this.canvas.height/1.8);
     }
     if (key === "Enter") {
