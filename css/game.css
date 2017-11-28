@@ -23,6 +23,6 @@ img {
   z-index: -1;
 }
 
-#paddle, #brick {
+#paddle, #brick, #ball {
   display: none;
 }

@@ -94,7 +94,7 @@ class Paddle {
     this.context.fillRect(this.paddleX, this.paddleY, this.paddleWidth, this.paddleHeight);
     this.context.closePath();
     var paddleImage = document.getElementById("paddle");
-    this.context.drawImage(paddleImage, this.paddleX - 6, this.paddleY, this.paddleWidth + 10, this.paddleHeight);
+    this.context.drawImage(paddleImage, this.paddleX - 10, this.paddleY, this.paddleWidth + 18, this.paddleHeight);
   }
 }
 
@@ -399,6 +399,8 @@ class Ball {
     this.context.fillStyle = 'gray';
     this.context.fill();
     this.context.closePath();
+    var ballImage = document.getElementById("ball");
+    this.context.drawImage(ballImage, this.x, this.y, this.radius, this.radius);
   }
 }
 
