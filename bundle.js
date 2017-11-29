@@ -137,24 +137,32 @@ class Bricks {
             this.context.fillStyle = 'orange';
             this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
             this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            var orangeBrickImage = document.getElementById("orange-brick");
+            this.context.drawImage(orangeBrickImage, brick.x, brick.y, this.brickWidth, this.brickHeight);
             break;
           case "paddleSizeDown":
             this.context.beginPath();
             this.context.fillStyle = 'green';
             this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
             this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            var greenBrickImage = document.getElementById("green-brick");
+            this.context.drawImage(greenBrickImage, brick.x, brick.y, this.brickWidth, this.brickHeight);
             break;
           case "ballSpeedUp":
             this.context.beginPath();
             this.context.fillStyle = 'blue';
             this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
             this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            var blueBrickImage = document.getElementById("blue-brick");
+            this.context.drawImage(blueBrickImage, brick.x, brick.y, this.brickWidth, this.brickHeight);
             break;
           case "ballSpeedDown":
             this.context.beginPath();
             this.context.fillStyle = 'yellow';
             this.context.fillRect(brick.x, brick.y, this.brickWidth, this.brickHeight);
             this.context.closePath(brick.x, brick.y, this.brickWidth, this.brickHeight);
+            var yellowBrickImage = document.getElementById("yellow-brick");
+            this.context.drawImage(yellowBrickImage, brick.x, brick.y, this.brickWidth, this.brickHeight);
             break;
           default:
             this.context.beginPath();
