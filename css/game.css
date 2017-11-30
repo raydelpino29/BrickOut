@@ -17,6 +17,7 @@ canvas {
 body {
   background-size: 100vw 100vh;
   right: 5vw;
+  overflow: hidden;
 }
 
 #background {
