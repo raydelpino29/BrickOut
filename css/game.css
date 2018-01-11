@@ -50,7 +50,8 @@ body {
   position: absolute;
   top: 8em;
   right: 55px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
 }
 
 .links a {
