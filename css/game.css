@@ -47,12 +47,11 @@ body {
 }
 
 .links {
-  position: absolute;
-  top: 8em;
-  right: 55px;
+  position: relative;
+  top: -33em;
+  left: 63em;
   display: flex;
   flex-direction: column;
-
 }
 
 .links a {
@@ -141,10 +140,10 @@ li:nth-child(3) {
 }
 
 .creator {
-  position: absolute;
+  position: relative;
   text-transform: none;
-  top: 7em;
-  right: 2.5em;
+  top: -32em;
+  left: 63em;
 }
 
 .creator label {
